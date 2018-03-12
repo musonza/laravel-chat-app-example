@@ -33,6 +33,6 @@ class ReadConversationsTest extends TestCase
     function a_user_can_read_a_single_conversation()
     {
         $this->get("/conversations/{$this->conversation->id}")
-            ->assertSee("Conversation {$this->conversation->id}");
+            ->assertSee("Conversation");
     }
 }
