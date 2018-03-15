@@ -22,6 +22,17 @@ class ReadConversationsTest extends TestCase
         $this->conversation = Chat::createConversation($participants);
     }
 
+    /** @test */
+    function guests_may_not_view_conversations()
+    {
+        auth()->logout();
+
+        $this->withExceptionHandling();
+
+        $this->get('/conversations')
+             ->assertRedirect(route('login'));
+    }
+
      /** @test */
     public function a_user_can_view_all_conversations()
     {
@@ -34,5 +45,14 @@ class ReadConversationsTest extends TestCase
     {
         $this->get("/conversations/{$this->conversation->id}")
             ->assertSee("Conversation");
+    }
+
+    /** @test */
+    function can_not_read_a_conversation_they_are_not_part_of()
+    {
+        $this->signIn();
+
+        $this->get("/conversations/{$this->conversation->id}")
+            ->assertRedirect(route('conversations.index'));
     }
 }

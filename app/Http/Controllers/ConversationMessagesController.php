@@ -5,14 +5,14 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Chat;
 
-class ConversationController extends Controller
+class ConversationMessagesController extends Controller
 {
     /**
      * Create a new ConversationController instance.
      */
     public function __construct()
     {
-        $this->user = auth()->user();
+        $this->middleware('auth');
     }
 
     /**
@@ -22,11 +22,7 @@ class ConversationController extends Controller
      */
     public function index()
     {
-        $conversations = Chat::conversations()->for($this->user)->get();
 
-        return view('conversations.index', [
-            'conversations' => $conversations
-        ]);
     }
 
     /**
@@ -36,7 +32,7 @@ class ConversationController extends Controller
      */
     public function create()
     {
-        return view('conversations.create');
+
     }
 
     /**
@@ -47,12 +43,7 @@ class ConversationController extends Controller
      */
     public function store(Request $request)
     {
-        $participants = [$this->user];
 
-        $conversation = Chat::createConversation($participants);
-
-        return redirect("/conversations/{$conversation->id}")
-            ->with('flash', 'You have started a new Conversation!');
     }
 
     /**
@@ -63,13 +54,7 @@ class ConversationController extends Controller
      */
     public function show($id)
     {
-        $conversation = Chat::conversation($id);
 
-        if (!$conversation->users->contains(auth()->user())) {
-            return redirect('/conversations');
-        }
-
-        return view('conversations.show', compact('conversation'));
     }
 
     /**

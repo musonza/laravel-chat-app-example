@@ -19,4 +19,10 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-Route::resource('conversations', 'ConversationController');
+Route::group(['prefix' => '','middleware' => ['auth']], function () {
+    Route::resource('conversations', 'ConversationController');
+
+    Route::resource('conversations.messages', 'ConversationMessagesController', ['only' => [
+        'index', 'store', 'show', 'update', 'destroy',
+    ]]);
+});
