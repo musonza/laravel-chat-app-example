@@ -41,9 +41,16 @@ class ConversationMessagesController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, $id)
     {
+        $conversation = Chat::conversation($id);
+        $sender = request()->user();
+        $message = Chat::message('Hello')
+                    ->from($sender)
+                    ->to($conversation)
+                    ->send();
 
+        dd($message);
     }
 
     /**

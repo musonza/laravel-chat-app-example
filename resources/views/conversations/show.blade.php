@@ -8,7 +8,7 @@
                     <div class="panel-heading">Conversation</div>
 
                     <div class="panel-body">
-                        <form method="POST" action="/conversations">
+                        <form method="POST" action="{{ route('conversations.messages.store', ['form' => $conversation['id']]) }}">
                             {{ csrf_field() }}
 
                             <div class="form-group">

@@ -8,14 +8,6 @@ use Chat;
 class ConversationController extends Controller
 {
     /**
-     * Create a new ConversationController instance.
-     */
-    public function __construct()
-    {
-        $this->user = auth()->user();
-    }
-
-    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
@@ -47,8 +39,7 @@ class ConversationController extends Controller
      */
     public function store(Request $request)
     {
-        $participants = [$this->user];
-
+        $participants = [request()->user()];
         $conversation = Chat::createConversation($participants);
 
         return redirect("/conversations/{$conversation->id}")
