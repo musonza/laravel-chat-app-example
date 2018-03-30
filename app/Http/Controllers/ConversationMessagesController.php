@@ -20,9 +20,14 @@ class ConversationMessagesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request, $id)
     {
+        $conversation = Chat::conversation($id);
+        $user = request()->user();
+        $page = $request->get('page', 1);
+        $messages = Chat::conversations($conversation)->for($user)->getMessages(10, $page)->toArray();
 
+        return view('messages.index', compact('messages', 'conversation'));
     }
 
     /**
@@ -45,12 +50,10 @@ class ConversationMessagesController extends Controller
     {
         $conversation = Chat::conversation($id);
         $sender = request()->user();
-        $message = Chat::message('Hello')
-                    ->from($sender)
-                    ->to($conversation)
-                    ->send();
+        Chat::message($request->message)->from($sender)->to($conversation)->send();
 
-        dd($message);
+        return redirect("/conversations/{$conversation->id}/messages")
+            ->with('flash', 'Message Sent!');
     }
 
     /**
